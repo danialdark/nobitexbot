@@ -217,7 +217,6 @@ const insertCandlestickBatch = async (tableName, batch) => {
             const query = pgp.helpers.insert(values, cs) +
                 ` ON CONFLICT (symbol_name, created_at)
             DO NOTHING`;
-            console.log(query)
 
             await t.none(query);
 
