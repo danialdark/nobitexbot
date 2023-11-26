@@ -213,7 +213,7 @@ const insertCandlestickBatch = async (tableName, batch) => {
                 created_at: record.created_at
             }));
 
-            const updateColumns = ['open_price', 'high_price', 'low_price', 'close_price'];
+            const updateColumns = ['open_price', 'high_price', 'low_price', 'close_price', 'volumn'];
 
             const query = pgp.helpers.insert(values, cs) +
                 ` ON CONFLICT (symbol_name, created_at)
