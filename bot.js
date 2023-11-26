@@ -185,7 +185,6 @@ const startSpotHistory = async (symbol, timeFrames, maxPage) => {
 };
 
 const insertCandlestickBatch = async (tableName, batch) => {
-
     try {
         await db.tx(async (t) => {
             const cs = new pgp.helpers.ColumnSet([
@@ -214,9 +213,11 @@ const insertCandlestickBatch = async (tableName, batch) => {
                 created_at: record.created_at
             }));
 
+            const updateColumns = ['open_price', 'high_price', 'low_price', 'close_price'];
+
             const query = pgp.helpers.insert(values, cs) +
                 ` ON CONFLICT (symbol_name, created_at)
-            DO NOTHING`;
+                DO UPDATE SET ${updateColumns.map(col => `${col} = EXCLUDED.${col}`).join(', ')}`;
 
             await t.none(query);
 
@@ -225,6 +226,7 @@ const insertCandlestickBatch = async (tableName, batch) => {
     } catch (error) {
         console.error('Error:', error.message);
     }
+
 };
 
 
